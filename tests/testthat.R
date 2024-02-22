@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(EUspiR)
+library(euspir)
 
-test_check("EUspiR")
+test_check("euspir")
