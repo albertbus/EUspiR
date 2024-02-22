@@ -40,4 +40,4 @@ should be installed:
 
 ## Author
 
-- *Albert Busca López*, <albertbuscalopez@gmail.com>
+- **Albert Busca López**, <albertbuscalopez@gmail.com>
