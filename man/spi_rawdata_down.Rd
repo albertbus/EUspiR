@@ -2,24 +2,27 @@
 % Please edit documentation in R/spi_rawdata_down.R
 \name{spi_rawdata_down}
 \alias{spi_rawdata_down}
-\title{Download the EU-SPI (2020) Raw Data}
+\title{Download EU-SPI (2020) Official Data}
 \usage{
 spi_rawdata_down(type)
 }
 \arguments{
-\item{type}{Variable that accepts the values "REGIONAL" to download the regional
-data or "NATIONAL to download the national data. It can also take the value
-"NORM" to provide the normalisation data from the GitHub of the EUspiR
-package, made from the European Commision data.}
+\item{type}{Variable that accepts the following values:
+\itemize{
+\item "regional", to download the regional raw indicator data;
+\item "national", to download the national raw indicator data;
+\item "normalisation", to download the normalisation data.
+}}
 }
 \value{
-A data frame with the chosen data type
+For the raw data, a data frame with the values for each indicator and
+each NUTS-2 region or NUTS-0 country. For the normalisation data, a data frame
+with the utopian and dystopian values and wether the indicator is inverted for
+each indicator of the EU-SPI (2020).
 }
 \description{
-This downloads the official raw data used for the creation of the EU-SPI (2020)
-as presented in the European Commission page. It returns a data frame with the
-values for each indicator and each region at NUTS-2 level or country at NUTS-0.
-Additionaly, it returns the official normalisation data.
+Download the official raw and nomralisation data used for the creation of the
+Eu-SPI (2020) as presented by the European Commision in the offical web page.
 }
 \references{
 Source of the indicator data: https://ec.europa.eu/regional_policy/sources/work/spi2020_raw_data.xlsx

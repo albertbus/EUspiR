@@ -1,7 +1,7 @@
 # spi_rawdata_down() regional data downloads
 
     Code
-      spi_rawdata_down("REGIONAL")
+      spi_rawdata_down("regional")
     Output
           Country NUTS region                                Region name
       1        AT        AT11                                 Burgenland
@@ -5550,7 +5550,7 @@
 # spi_rawdata_down() national data downloads
 
     Code
-      spi_rawdata_down("NATIONAL")
+      spi_rawdata_down("national")
     Output
          Country Country name Premature mortality (<65) Infant mortality
       1       AT      Austria                 0.1753428         2.900000
@@ -6168,4 +6168,122 @@
       25         20.700000                  23.400000
       26         11.666667                  13.600000
       27          3.433333                   3.433333
+
+# spi_rawdata_down() normalisation data downloads
+
+    Code
+      spi_rawdata_down("normalisation")
+    Output
+                                                            Indicator Inverted
+      1                                     Premature mortality (>65)     TRUE
+      2                                              Infant mortality     TRUE
+      3                                           Unmet medical needs     TRUE
+      4                                             Insufficient food     TRUE
+      5                               Satisfaction with water quality    FALSE
+      6                                    Lack of toilet in dwelling     TRUE
+      7                                            Uncollected sewage     TRUE
+      8                                              Sewage treatment    FALSE
+      9                                    Burdensome cost of housing     TRUE
+      10                                   Housing quality - dampness     TRUE
+      11                                                 Overcrowding     TRUE
+      12                                     Lack of adequate heating     TRUE
+      13                                                        Crime     TRUE
+      14                                              Safety at night    FALSE
+      15                                                 Money stolen     TRUE
+      16                                             Assaulted/Mugged     TRUE
+      17                                      Secondary enrolment (%)    FALSE
+      18                              Lower-secondary completion only     TRUE
+      19                                         Early school leavers     TRUE
+      20                                             Internet at home    FALSE
+      21                                            Broadband at home    FALSE
+      22                   Online interaction with public authorities    FALSE
+      23                                              Internet access    FALSE
+      24                                              Life expectancy    FALSE
+      25                                     Subjective health status    FALSE
+      26                                 Premature deaths from cancer     TRUE
+      27                          Premature deaths from heart disease     TRUE
+      28                                           Leisure activities    FALSE
+      29                                               Traffic deaths     TRUE
+      30                                          Air pollution - NO2     TRUE
+      31                                        Air pollution - ozone     TRUE
+      32                                         Air pollution - PM25     TRUE
+      33                                         Air pollution - PM10     TRUE
+      34                                 Trust in national government    FALSE
+      35                                    Trust in the legal system    FALSE
+      36                                          Trust in the police    FALSE
+      37                                           Active citizenship    FALSE
+      38          Female participation in regional assemblies (share)    FALSE
+      39            Quality and accountability of government services    FALSE
+      40                                    Freedom over life choices    FALSE
+      41                                            Job opportunities    FALSE
+      42                        Involuntary part-time/ temporary work     TRUE
+      43 Young people not in education, employment or training (NEET)     TRUE
+      44                                             Corruption index    FALSE
+      45                          Impartiality of government services    FALSE
+      46                                 Tolerance towards immigrants    FALSE
+      47                                 Tolerance towards minorities    FALSE
+      48                                Tolerance towards homosexuals    FALSE
+      49                                               Making friends    FALSE
+      50                                                 Volunteering    FALSE
+      51                                        Gender employment gap     TRUE
+      52                                Tertiary education attainment    FALSE
+      53                                     Tertiary enrolment (as%)    FALSE
+      54                                            Lifelong learning    FALSE
+      55                                   Lifelong learning - female    FALSE
+         Utopian.value Dystopian.value
+      1           0.07            0.54
+      2           0.00           15.80
+      3           0.00           21.62
+      4           0.00           68.00
+      5           1.00            0.00
+      6           0.00           62.00
+      7           0.00           69.00
+      8         100.00            0.00
+      9           0.00          100.00
+      10          0.00          100.00
+      11          0.00           67.00
+      12          0.00          100.00
+      13          0.00           43.93
+      14          1.00            0.00
+      15          0.00            0.20
+      16          0.00            0.20
+      17        100.00           72.90
+      18          0.00           82.00
+      19          0.00           45.80
+      20        100.00            0.00
+      21        100.00            0.00
+      22        100.00            0.00
+      23          1.00            0.54
+      24         86.02           71.70
+      25        100.00            0.00
+      26          0.00          169.10
+      27          0.00          217.40
+      28        100.00            0.00
+      29          0.00          258.48
+      30          0.00           40.00
+      31         70.00          120.00
+      32          0.00           25.00
+      33          0.00           40.00
+      34          1.00            0.00
+      35          1.00            0.00
+      36          1.00            0.00
+      37        100.00            0.00
+      38          0.50            0.00
+      39          3.00           -3.00
+      40          1.00            0.00
+      41          1.00            0.00
+      42          0.00           42.70
+      43          0.00           35.90
+      44          3.00           -3.00
+      45          3.00           -3.00
+      46          1.00            0.00
+      47          1.00            0.00
+      48          1.00            0.00
+      49          1.00            0.00
+      50        100.00            0.00
+      51          0.00           33.00
+      52         40.00            0.00
+      53          6.20            0.00
+      54         21.70            0.00
+      55         24.60            0.00
 
