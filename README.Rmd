@@ -33,6 +33,7 @@ devtools::install_github("albertbus/euspir")
 
 For the correct functioning of this package, the following packages should be
 installed:
+
 - cowplot
 - eurostat
 - ggplot2

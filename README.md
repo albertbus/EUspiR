@@ -26,8 +26,17 @@ devtools::install_github("albertbus/euspir")
 ## Dependencies
 
 For the correct functioning of this package, the following packages
-should be installed: - cowplot - eurostat - ggplot2 - giscoR -
-patchwork - readxl - rnaturalearth - showtext - sf
+should be installed:
+
+- cowplot
+- eurostat
+- ggplot2
+- giscoR
+- patchwork
+- readxl
+- rnaturalearth
+- showtext
+- sf
 
 ## Author
 
