@@ -91,13 +91,7 @@ spi_rawdata_down <- function(type) {
 
   # Downloading normalisation data
   if (type == "normalisation") {
-    # Download the needed data from GitHub
-    file_url <- "https://raw.githubusercontent.com/albertbus/EUspiR/master/data/spi_normalisation_data.csv"
-    download.file(file_url, paste0(tempdir(), "norm_data.csv"))
-
-    # Return the csv file in R
-    data <- read.csv(paste0(tempdir(), "norm_data.csv"))
-    file.remove(paste0(tempdir(), "norm_data.csv"))
-    return(data)
+    spi_normalisation_data <- spi_normalisation_data
+    return(spi_normalisation_data)
   }
 }
