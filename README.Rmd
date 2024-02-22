@@ -18,38 +18,30 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of euspir is to ...
+This package allows for the creation of the EU-SPI following every step of its methodology as seen in the methodology papers. This package is in no way affiliated or working with any official institutions of the European Union but a third-party initiative. It's main objective is to incentivise the analysis of the EU-SPI index by making it more accessible.
 
 ## Installation
 
-You can install the development version of euspir from [GitHub](https://github.com/) with:
+You can install the development version of euspir from [G    itHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("albertbus/euspir")
 ```
 
-## Example
+## Dependencies
 
-This is a basic example which shows you how to solve a common problem:
+For the correct functioning of this package, the following packages should be
+installed:
+- cowplot
+- eurostat
+- ggplot2
+- giscoR
+- patchwork
+- readxl
+- rnaturalearth
+- showtext
+- sf
 
-```{r example}
-library(euspir)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+## Author
+- *Albert Busca López*, <albertbuscalopez@gmail.com>
