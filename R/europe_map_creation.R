@@ -23,7 +23,7 @@
 
 europe_map_creation <- function(map_data,type="ALL",title_t="",subtitle_t="",caption_t="",var_name="Legend",col_pal="ag_GrnYl"){
   # Handle the given data for potential errors
-  stopifnot(exists(map_data))
+  stopifnot(!is.null(map_data))
   stopifnot(is.character(type))
   type <- tolower(type)
   if (type != "all" & type != "continental") {type <- toupper(type)}
