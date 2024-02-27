@@ -4,23 +4,44 @@
 \alias{spi_indicator_sum}
 \title{Aggregation of indicators within the EU-SPI (2020)}
 \usage{
-spi_indicator_sum(indicators, componentName)
+spi_indicator_sum(
+  type,
+  norm_data = NULL,
+  component_name = "all",
+  component_index = NULL
+)
 }
 \arguments{
-\item{indicators}{Data frame with the values of each indicator (columns) for each
-region (rows)}
+\item{type}{Variable that can take the values "national" when the values to
+aggregate are at the NUTS-0 level or "regional" when the values to aggregate are
+at the NUTS-2 level.}
 
-\item{componentName}{Name of the component that is to be obtained as the final
-result of the aggregation}
+\item{norm_data}{Data frame with the values of each indicator (column), for each
+region or country (rows). By default (norm_data = NULL) it takes the official
+data from the European Commission.}
+
+\item{component_name}{Name of the component to be obtained as the final result
+of the aggregation. Alternatively, and by default, setting it to "all" uses the
+twelve names of the twelve official components on th EU-SPI (2020).}
+
+\item{component_index}{List of the index of each component within the data frame
+provided. Each item of the list should be the indexes of one component's indicators.
+By default (component_index = NULL) it will assume that the index follows the
+official data when norm_data is also NULL or that all the data frame is only
+one component when norm_data is not NULL.}
 }
 \description{
-Aggregate a set of indicators as seen in the EU-SPI (2020) methodology
+Aggregate a set of indicators as seen in the EU-SPI (2020) methodology.
 }
 \examples{
+#With the official data
+national_components <- spi_indicator_sum("national")
+
+#With custom data
 data <- data.frame("Regions" = c("Region A", "Region B", "Region C"),
                    "Indicator 1" = sample(1:100,3),
                    "Indicator 2" = sample(1:100,3),
                    "Indicator 3" = sample(1:100,3))
-spi_indicator_sum(data,"Component 1")
+spi_indicator_sum("regional", data,"Component 1")
 
 }
