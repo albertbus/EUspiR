@@ -4,7 +4,8 @@
 #' the NUTS-2 regions, according to the EU-SPI (2020) methodology.
 #' @param unweighted_values Data frame with the values to weight of the chosen
 #' component. See details for more information about the format of the data frame.
-#' @param country NUTS-0 code of the country to weight. It can also take the value
+#' @param country NUTS-0 code of the country to weight. For several countries,
+#' country should be a vector of the NUTS-0 codes to be used. It can also take the value
 #' "all" so that it is applied to each EU country at once.
 #' @param nationalValue Data frame with the national values to weight for the chosen
 #' component. See details for more information about the format of the data frame.
@@ -36,30 +37,37 @@
 #'
 #' @export
 
-weighted_spi <- function(unweighted_values,country,nationalValue){
+weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL){
   #Handling of given data in case of potential errors
-  stopifnot(is.data.frame(unweighted_values))
-  stopifnot(is.data.frame(nationalValue))
+  if (!is.null(unweighted_values)) {stopifnot(is.data.frame(unweighted_values))}
+  if (!is.null(nationalValue)) {stopifnot(is.data.frame(nationalValue))}
   stopifnot(is.character(country))
   country <- tolower(country)
-  if (country != "all") {stopifnot(nchar(country) == 2)
+  if (country != "all") {stopifnot(nchar(country[1]) == 2)
     country <- toupper(country)}
+
+  #Retrieving the data if needed
+  if (is.null(unweighted_values)) {unweighted_values <- spi_indicator_sum("regional")}
+  if (is.null(nationalValue)) {unweighted_values <- spi_indicator_sum("national")}
 
   #Creation of the data base of population and countries
   population <- eurostat::get_eurostat(id = "tgs00096", filters = list(time = c(2017:2019)))[c(5,7)]
   if (country == "all") {
     population <- subset(population, !grepl("AL|CH|HR02|HR05|HR06|IS|XX|ME|MK|LI|NO|RS", population$geo))
     population <- subset(population, !grepl("AL|CH|HR02|HR05|HR06|IS|XX|ME|MK|LI|NO|RS", population$geo))
-
     population <- population[order(population$geo),][1:720,]
-  }
-  else {population <- subset(population, grepl(paste0("^", country), population$geo))}
+    }
+  else {
+    country <- paste(country, collapse = "|")
+    population <- subset(population, grepl(paste0("^", country), population$geo))
+    }
   population <- aggregate(values ~ geo, data = population, mean)
   countries <- unique(substr(population$geo, start = 1, stop = 2))
 
-  weighted_data <- as.data.frame(unweighted_values[which(sapply(unweighted_values, is.character))])
+  # Application of the formula to each component
+  weighted_data <- unweighted_values[which(sapply(unweighted_values, is.character))]
   for (component in (which(sapply(unweighted_values, is.numeric)))) {
-    #Application of the formula to each corresponding country
+    #A pplication of the formula to each corresponding country
     result <- c()
     for (c in countries) {
       weights <- population[grepl(paste0("^", c), population$geo),]
@@ -78,3 +86,8 @@ weighted_spi <- function(unweighted_values,country,nationalValue){
   colnames(weighted_data) <- colnames(unweighted_values)
   return(weighted_data)
 }
+
+
+grepl("AT|ES", test$Country)
+test <- c("AT","ES","BE")
+test2 <- paste(test, collapse = "|")
