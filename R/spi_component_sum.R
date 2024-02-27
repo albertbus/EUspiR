@@ -21,11 +21,23 @@
 
 #This function aggregates components following the EU-SPI (2020) methodology
 #This function aggregates dimensions following the EU-SPI (2020) methodology
-spi_component_sum <- function(dataSet,dimensionName,b=0.5){
+spi_component_sum <- function(type, dataSet = NULL, dimensionName = "all", b=0.5){
   #Handle given data in case of potential errors
-  stopifnot(is.data.frame(dataSet))
+  stopifnot(is.character(type))
+  if (!is.null(dataSet)) {stopifnot(is.data.frame(dataSet))}
   stopifnot(is.character(dimensionName))
   stopifnot(is.numeric(b))
+
+  #Retrieve data if necessary
+  if (is.null(dataSet)) {
+    if (type == "weighted") {dataSet <- weighted_spi("all")}
+    else {dataSet <- spi_indicator_sum("national")}
+  }
+
+  #Set the dimension(s) name
+  if (dimensionName = "all") {dimensionName <- c("Basic Human Needs",
+                                                 "Foundations of Well-Being",
+                                                 "Opportunity")}
 
   #First step: elevate the values to b
   elevate_to_b <- dataSet[which(sapply(dataSet, is.numeric))[1]:ncol(dataSet)]^b
