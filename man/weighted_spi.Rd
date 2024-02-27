@@ -4,14 +4,15 @@
 \alias{weighted_spi}
 \title{Calculation of the weighted components within EU-SPI (2020)}
 \usage{
-weighted_spi(unweighted_values, country, nationalValue)
+weighted_spi(country, unweighted_values = NULL, nationalValue = NULL)
 }
 \arguments{
+\item{country}{NUTS-0 code of the country to weight. For several countries,
+country should be a vector of the NUTS-0 codes to be used. It can also take the value
+"all" so that it is applied to each EU country at once.}
+
 \item{unweighted_values}{Data frame with the values to weight of the chosen
 component. See details for more information about the format of the data frame.}
-
-\item{country}{NUTS-0 code of the country to weight. It can also take the value
-"all" so that it is applied to each EU country at once.}
 
 \item{nationalValue}{Data frame with the national values to weight for the chosen
 component. See details for more information about the format of the data frame.}
@@ -42,6 +43,6 @@ national_val <- data.frame("NUTS_ID" = "AT",
                            "Component1" = 52,
                            "Component2" = 49,
                            "Component3" = 55)
-weighted_spi(data, "AT", national_val)
+weighted_spi("AT", data, national_val)
 
 }
