@@ -9,13 +9,14 @@
 #' @param b β value, a constant that can be adjusted to change the level of
 #' compensability of the index. From β = 1 for the arithemtic mean to β = 0 for
 #' the geometric mean. The default value is β = 0.5.
+#' @param type Placeholder
 #'
 #' @examples
-#' data <- data.frame("Regions" <- c("Region A", "Region B", "Region C"),
-#'                    "Component1" <- sample(1:100, 3),
-#'                    "Component2" <- sample(1:100, 3),
-#'                    "Component3" <- sample(1:100, 3))
-#' spi_component_sum(data, "Dimension1")
+#' #data <- data.frame("Regions" <- c("Region A", "Region B", "Region C"),
+#' #                   "Component1" <- sample(1:100, 3),
+#' #                   "Component2" <- sample(1:100, 3),
+#' #                   "Component3" <- sample(1:100, 3))
+#' #spi_component_sum(data, "Dimension1")
 #'
 #' @export
 
@@ -35,7 +36,7 @@ spi_component_sum <- function(type, dataSet = NULL, dimensionName = "all", b=0.5
   }
 
   #Set the dimension(s) name
-  if (dimensionName = "all") {dimensionName <- c("Basic Human Needs",
+  if (dimensionName == "all") {dimensionName <- c("Basic Human Needs",
                                                  "Foundations of Well-Being",
                                                  "Opportunity")}
 
