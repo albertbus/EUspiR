@@ -52,18 +52,19 @@ spi_indicator_sum <- function(type, norm_data = NULL, component_name = "all", co
   }
 
   #Set the name of the component
-  if (component_name == "all") {component_name <- c("Nutrition and Basic Medical Care",
-                                                  "Water and Sanitation",
-                                                  "Shelter",
-                                                  "Personal Security",
-                                                  "Access to Basic Knowledge",
-                                                  "Access to ICT",
-                                                  "Health and Wellness",
-                                                  "Environmental Quality",
-                                                  "Personal Rights",
-                                                  "Personal Freedom and Choice",
-                                                  "Tolerance and Inclusion",
-                                                  "Access to Advanced Education")}
+  if (any(component_name == "all")) {
+    component_name <- c("Nutrition and Basic Medical Care",
+                        "Water and Sanitation",
+                        "Shelter",
+                        "Personal Security",
+                        "Access to Basic Knowledge",
+                        "Access to ICT",
+                        "Health and Wellness",
+                        "Environmental Quality",
+                        "Personal Rights",
+                        "Personal Freedom and Choice",
+                        "Tolerance and Inclusion",
+                        "Access to Advanced Education")}
 
   #Apply the aggregation formula
   is_character <- which(sapply(norm_data, is.character))
