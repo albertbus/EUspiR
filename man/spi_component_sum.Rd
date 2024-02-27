@@ -4,9 +4,11 @@
 \alias{spi_component_sum}
 \title{Component or dimension aggregation within EU-SPI (2020)}
 \usage{
-spi_component_sum(dataSet, dimensionName, b = 0.5)
+spi_component_sum(type, dataSet = NULL, dimensionName = "all", b = 0.5)
 }
 \arguments{
+\item{type}{Placeholder}
+
 \item{dataSet}{Data frame of the components or dimensions to aggregate. The values
 should be numerical.}
 
@@ -21,10 +23,10 @@ the geometric mean. The default value is β = 0.5.}
 Aggregate components or dimensions following the EU-SPI (2020) methodology.
 }
 \examples{
-data <- data.frame("Regions" <- c("Region A", "Region B", "Region C"),
-                   "Component1" <- sample(1:100, 3),
-                   "Component2" <- sample(1:100, 3),
-                   "Component3" <- sample(1:100, 3))
-spi_component_sum(data, "Dimension1")
+#data <- data.frame("Regions" <- c("Region A", "Region B", "Region C"),
+#                   "Component1" <- sample(1:100, 3),
+#                   "Component2" <- sample(1:100, 3),
+#                   "Component3" <- sample(1:100, 3))
+#spi_component_sum(data, "Dimension1")
 
 }
