@@ -37,7 +37,7 @@
 #'
 #' @export
 
-weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL){
+weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL, append = TRUE){
   #Handling of given data in case of potential errors
   if (!is.null(unweighted_values)) {stopifnot(is.data.frame(unweighted_values))}
   if (!is.null(nationalValue)) {stopifnot(is.data.frame(nationalValue))}
@@ -48,11 +48,13 @@ weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL
 
   #Retrieving the data if needed
   if (is.null(unweighted_values)) {
-    unweighted_values <- spi_indicator_sum("regional")
-    colnames(unweighted_values)[2] <- "NUTS_ID"
+    if(append == TRUE){unweighted_values <- spi_indicator_sum("regional")}
+    else{unweighted_values <- spi_indicator_sum("regional", append = FALSE)}
+    colnames(unweighted_values)[2] <- "NUTS_ID1"
     }
   if (is.null(nationalValue)) {
-    nationalValue <- spi_indicator_sum("national")
+    if(append == TRUE){nationalValue <- spi_indicator_sum("national")}
+    else{nationalValue <- spi_indicator_sum("national", append = FALSE)}
     colnames(nationalValue)[1] <- "NUTS_ID"
     }
 
