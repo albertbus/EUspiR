@@ -30,7 +30,7 @@
 #'
 #' @export
 
-spi_indicator_sum <- function(type, norm_data = NULL, component_name = "all", component_index = NULL) {
+spi_indicator_sum <- function(type, norm_data = NULL, component_name = "all", component_index = NULL, append = TRUE) {
   #Handle the data given in case of potential errors
   stopifnot(is.character(type))
   if (!is.null(norm_data)) {stopifnot(is.data.frame(norm_data))}
@@ -73,7 +73,8 @@ spi_indicator_sum <- function(type, norm_data = NULL, component_name = "all", co
   for (rep in repetition) {
     rep_result <- norm_data[component_index[[rep]]]
     rep_result[component_name[rep]] <- rowMeans(rep_result, na.rm = TRUE)
-    result <- cbind(result, rep_result)
+    if (append == TRUE) {result <- cbind(result, rep_result)}
+    else {result <- cbind(result, rep_result[component_name[rep]])}
   }
   return(result)
 }
