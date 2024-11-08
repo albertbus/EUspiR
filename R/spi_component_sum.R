@@ -2,16 +2,45 @@
 #' @description
 #' Aggregate components or dimensions following the EU-SPI (2020) methodology.
 #'
-#' @param dataSet Data frame of the components or dimensions to aggregate. The values
-#' should be numerical.
-#' @param dimensionName Name of the dimension or index that is to be retrieved
-#' as the result of the aggregation.
+#' @param type Variable that can take "regional dimension" to aggregate to the three
+#' dimensions at the NUTS-2 level, "national dimension" to aggregate to the three dimensions
+#' at the NUTS-0 (country) level, "regional spi" to aggregate to the EU-SPI index at the
+#' NUTS-2 level and "national spi" to aggregate to the EU-SPI at the NUTS-0 level.
+#' Alternatively, it can also take the value "custom" for custom data.
+#' @param data Data frame of the components or dimensions to aggregate. The values
+#' should be numerical. If not provided, it will take the corresponding official data
+#' according to the type parameter.
+#' @param name Name of the dimension or index that is to be retrieved
+#' as the result of the aggregation. If not provided, it will take the corresponding
+#' official data according to the type parameter. See details for using custom data.
 #' @param b β value, a constant that can be adjusted to change the level of
 #' compensability of the index. From β = 1 for the arithemtic mean to β = 0 for
-#' the geometric mean. The default value is β = 0.5.
-#' @param type Placeholder
+#' the geometric mean. The default value is β = 0.5 as per the EU-SPI (2020) methodology.
+#' @param index A list of numeric vectors. Only needed when type is custom. Each item 
+#' should represent the index of the components of each dimension. If not provided,
+#' it will take the corresponding official indices for the official data or, if type
+#' is custom, it will assume that everything must be aggregated to a single index.
+#' 
+#' @details 
+#' When using custom data, type must be set to custom. Data must be provided.
+#' 
+#' ## Aggregating to a global index
+#' When aggregating all variables to only one global indicator, the index parameter
+#' can be omitted. It will be assumed that all numeric columns in data should be
+#' aggregated. The name variable is optional, the global index will be named
+#' "Aggregated Index", or it can be changed using the parameter.
+#' 
+#' ## Aggregating to various dimensions
+#' When aggregating groups of variables to more than one dimension, the index parameter
+#' must be stated. The name variable is optional. Each dimension will be named "Dimension [n]",
+#' or it can be changed using the parameter.
 #'
 #' @examples
+#' # With official data
+#' spi_component_sum("regional spi") # For the regional EU-SPI
+#' spi_component_sum("national dimension") # For the national dimensions
+#' 
+#' # With custom data 
 #' #data <- data.frame("Regions" <- c("Region A", "Region B", "Region C"),
 #' #                   "Component1" <- sample(1:100, 3),
 #' #                   "Component2" <- sample(1:100, 3),
@@ -22,45 +51,60 @@
 
 #This function aggregates components following the EU-SPI (2020) methodology
 #This function aggregates dimensions following the EU-SPI (2020) methodology
-spi_component_sum <- function(type, dataSet = NULL, dimensionName = "all", b=0.5, component_index = NULL, append = TRUE){
+spi_component_sum <- function(type, data = NULL, name = "Aggregated Index", b=0.5, index = NULL, append = TRUE){
   #Handle given data in case of potential errors
   stopifnot(is.character(type))
-  if (!is.null(dataSet)) {stopifnot(is.data.frame(dataSet))}
-  stopifnot(is.character(dimensionName))
+  if (!is.null(data)) {stopifnot(is.data.frame(data))}
+  stopifnot(is.character(name))
   stopifnot(is.numeric(b))
+  type <- tolower(type)
 
   #Retrieve data if necessary
-  if (is.null(dataSet)) {
-    if (type == "regional dimension") {dataSet <- weighted_spi("all", append = FALSE)}
-    if (type == "regional spi") {dataSet <- spi_component_sum("regional dimension", append = FALSE)}
-    if (type == "national dimension") {dataSet <- spi_indicator_sum("national", append = FALSE)}
-    if (type == "national spi") {dataSet <- spi_component_sum("national dimension", append = FALSE)}
+  if (is.null(data)) {
+    if (type == "regional dimension") {data <- weighted_spi("all", append = FALSE)}
+    if (type == "regional spi") {data <- spi_component_sum("regional dimension", append = FALSE)}
+    if (type == "national dimension") {data <- spi_indicator_sum("national", append = FALSE)}
+    if (type == "national spi") {data <- spi_component_sum("national dimension", append = FALSE)}
   }
 
   #Set the dimension(s) name
-  if (dimensionName == "all") {
+  if (name == "all") {
     if (type == "regional dimension" | type == "national dimension") {
-      dimensionName <- c("Basic Human Needs",
+      name <- c("Basic Human Needs",
                          "Foundations of Well-Being",
                          "Opportunity")
     }
-    if (type == "regional spi" | type == "national spi") {dimensionName <- "EU-SPI"}
+    if (type == "regional spi" | type == "national spi") {name <- "EU-SPI"}
+  }
+  else if (type == "regional dimension" | type == "national dimension") {
+    name <- c("Basic Human Needs",
+                        "Foundations of Well-Being",
+                        "Opportunity")
+  }
+  else if (type == "basic human needs") { name <- "Basic Human Needs" }
+  else if (type == "foundations of well-being") { name <- "Foundations of Well-Being"}
+  else if (type == "opportunity") { name <- "Opportunity" }
+  else if (type == "custom") {
+    if (!is.null(index)) { for(n in 1:length(index)) {
+      name[n] <- paste("Dimension", n)
+    }}
   }
 
   #Set the dimension(s) index
-  if (is.null(component_index)) {
-    if (type == "regional dimension") {component_index <- list(c(4:7),c(8:11),c(12:15))}
-    if (type == "regional spi") {component_index <- list(c(4:6))}
-    if (type == "national dimension") {component_index <- list(c(3:6),c(7:10),c(11:14))}
-    if (type == "national spi") {component_index <- list(c(3:5))}
+  if (is.null(index)) {
+    if (type == "regional dimension") {index <- list(c(4:7),c(8:11),c(12:15))}
+    if (type == "regional spi") {index <- list(c(4:6))}
+    if (type == "national dimension") {index <- list(c(3:6),c(7:10),c(11:14))}
+    if (type == "national spi") {index <- list(c(3:5))}
+    if (type == "custom") {index <- which(sapply(data, is.numeric))}
   }
 
-  result <- dataSet[sapply(dataSet, is.character)]
+  result <- data[sapply(data, is.character)]
 
-  for(n in 1:length(component_index)) {
+  for(n in 1:length(index)) {
     #First step: Retrieve data for the aggregation
-    agg_data <- cbind(dataSet[which(sapply(dataSet, is.character))],
-                      dataSet[component_index[[n]]])
+    agg_data <- cbind(data[which(sapply(data, is.character))],
+                      data[index[[n]]])
 
     #Second step: elevate the values to b
     elevate_to_b <- agg_data[which(sapply(agg_data, is.numeric))[1]:ncol(agg_data)]^b
@@ -75,7 +119,7 @@ spi_component_sum <- function(type, dataSet = NULL, dimensionName = "all", b=0.5
     fifth_step <- sum_row*one_indicator_n
 
     #Sixth step: elevate the values to (1/b)
-    agg_data[dimensionName[n]] <- fifth_step^(1/b)
+    agg_data[name[n]] <- fifth_step^(1/b)
 
     #Return the dimension(s)
     agg_data <- agg_data[sapply(agg_data, is.numeric)]
