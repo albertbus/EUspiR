@@ -6,9 +6,9 @@
 #' - "regional" to normalise values for the NUTS-2 EU regions;
 #' - "national" to normalise values for the EU state members.
 #' @param normdata Normalisation data needed according to the EU-SPI (2020) methodology.
-#' By default, (normdata = NULL) it uses the official normalisation data provided by
-#' the European Commission. See details to learn how to use custom normalisation data.
-#' @param rawdata Data frame of values that need to be normalised. By default, (rawdata = NULL)
+#' By default, it uses the official normalisation data provided by the European 
+#' Commission. See details to learn how to use custom normalisation data.
+#' @param rawdata Data frame of values that need to be normalised. By default, 
 #' it uses the official raw indicator data provided by the European Commission.
 #'
 #' @details
@@ -16,17 +16,17 @@
 #'
 #' The custom normalisation data needs to be a data frame containing 4 columns, as such:
 #' - First column: (character) Should have the indicator name, one for each row.
-#' - Second column: (logical) Should represent whether that indicator is inverted
-#' (negative relation to the index) or not (positive relation to the index).
+#' - Second column: (logical) Should be TRUE if the indicator is inverted (negative relation
+#' to the index) or FALSE otherwise (positive relation to the index).
 #' - Third column: (numeric) Should have the utopian values for each indicator.
 #' - Fourth column: (numeric) Should have the dystopian values for each indicator.
 #'
 #' ## Custom Raw Data
-#' The function expects the raw data to have one indicator per column, with the values
-#' all being numeric. At the start of the data frame, some character columns can be had
-#' like the NUTS Codes or the Region Names, and they will be kept to the normalised data
-#' frame.
-#'
+#' 
+#' The function expects the raw data to have one indicator per column and one row per
+#' observation. All colunms should be numeric. At the start of the dataframe, however,
+#' the firsts columns can be character for labeling porpouses, like the NUTS IDs or the
+#' region names, and they will be preserved after the normalisation process.
 #'
 #' @examples
 #' #With the official data
