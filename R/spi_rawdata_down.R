@@ -1,7 +1,7 @@
 #' Download EU-SPI (2020) Official Data
 #' @description
 #' Download the official raw and nomralisation data used for the creation of the
-#' Eu-SPI (2020) as presented by the European Commision in the offical web page.
+#' EU-SPI (2020) as presented by the European Commision in the offical web page.
 #'
 #' @references Source of the indicator data: https://ec.europa.eu/regional_policy/sources/work/spi2020_raw_data.xlsx
 #' @references Source of the normalisation data: https://ec.europa.eu/regional_policy/sources/work/202006_spi_en.pdf
@@ -11,10 +11,11 @@
 #' - "national", to download the national raw indicator data;
 #' - "normalisation", to download the normalisation data.
 #'
-#' @returns For the raw data, a data frame with the values for each indicator and
-#' each NUTS-2 region or NUTS-0 country. For the normalisation data, a data frame
-#' with the utopian and dystopian values and wether the indicator is inverted for
-#' each indicator of the EU-SPI (2020).
+#' @returns Returns either a data frame with the vlaues for each indicator at the
+#' NUTS-2 level if type is "regional" or at the NUTS-0 level (country level) if 
+#' type is "national". If type is "normalistation" it returns a data frame with the
+#' utopian adn dystopian values and whether the indicator is inverted for each indicator
+#' of the EU-SPI 2020 instead.
 #'
 #' @importFrom utils download.file read.csv
 #'
@@ -22,7 +23,7 @@
 
 spi_rawdata_down <- function(type) {
   # Handling the given data for potential errors
-  stopifnot(is.character(type))
+  if (!is.character(type)) {stop(paste0("Error: 'type' must be a character vector, but it was of type ", typeof(type),". Please, provide a character vector."))}
   type <- tolower(type)
 
   # Downloading regional data
