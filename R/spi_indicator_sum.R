@@ -5,20 +5,21 @@
 #' @param type Variable that can take the values "national" when the values to
 #' aggregate are at the NUTS-0 level or "regional" when the values to aggregate are
 #' at the NUTS-2 level.
-#' @param norm_data Data frame with the values of each indicator (column), for each
-#' region or country (rows). By default (norm_data = NULL) it takes the official
+#' @param data Data frame with the values of each indicator (column), for each
+#' region or country (rows). By default (data = NULL) it takes the official
 #' data from the European Commission.
-#' @param component_name Name of the component to be obtained as the final result
+#' @param component_name Name of the component(s) to be obtained as the final result
 #' of the aggregation. Alternatively, and by default, setting it to "all" uses the
-#' twelve names of the twelve official components on th EU-SPI (2020).
-#' @param component_index List of the index of each component within the data frame
-#' provided. Each item of the list should be the indexes of one component's indicators.
-#' By default (component_index = NULL) it will assume that the index follows the
-#' official data when norm_data is also NULL or that all the data frame is only
-#' one component when norm_data is not NULL.
+#' names of the twelve official components on the EU-SPI (2020).
+#' @param component_index List of the column indeces of each comopnent within data.
+#' Eahc item of the list should be a numeric vector stating the indeces of each
+#' component's indicators. By default it will assume that the index follows the
+#' official data when data is not provided or that all the indicators are to be
+#' aggregated to only one component when nomr_data is provided.
 #'
 #' @examples
 #' #With the official data
+#' regional_components <- spi_indicator_sum("regional")
 #' national_components <- spi_indicator_sum("national")
 #'
 #' #With custom data
@@ -30,24 +31,24 @@
 #'
 #' @export
 
-spi_indicator_sum <- function(type, norm_data = NULL, component_name = "all", component_index = NULL, append = TRUE) {
+spi_indicator_sum <- function(type, data = NULL, component_name = "all", component_index = NULL, append = TRUE) {
   #Handle the data given in case of potential errors
   stopifnot(is.character(type))
-  if (!is.null(norm_data)) {stopifnot(is.data.frame(norm_data))}
+  if (!is.null(data)) {stopifnot(is.data.frame(data))}
   stopifnot(is.character(component_name))
   type <- tolower(type)
 
   #Retrieve the data if needed
-  if (is.null(norm_data)) {
-    norm_data <- spi_normalisation_m(type)
+  if (is.null(data)) {
+    data <- spi_normalisation_m(type)
     component_index <- list(c(1:4),c(5:8),c(9:12),c(13:16),c(17:19),c(20:23),c(24:29),
                        c(30:33),c(34:39),c(40:44),c(45:51),c(52:55))
-    is_character <-  which(sapply(norm_data, is.character))
+    is_character <-  which(sapply(data, is.character))
     component_index <- lapply(component_index, function(x) x + is_character[length(is_character)])
     repetition <- 1:12
     }
   else {
-    if (is.null(component_index)) {component_index <- list(which(sapply(norm_data, is.numeric)))}
+    if (is.null(component_index)) {component_index <- list(which(sapply(data, is.numeric)))}
     repetition <- length(component_index)
   }
 
@@ -67,11 +68,11 @@ spi_indicator_sum <- function(type, norm_data = NULL, component_name = "all", co
                         "Access to Advanced Education")}
 
   #Apply the aggregation formula
-  is_character <- which(sapply(norm_data, is.character))
-  result <- norm_data[is_character]
+  is_character <- which(sapply(data, is.character))
+  result <- data[is_character]
 
   for (rep in repetition) {
-    rep_result <- norm_data[component_index[[rep]]]
+    rep_result <- data[component_index[[rep]]]
     rep_result[component_name[rep]] <- rowMeans(rep_result, na.rm = TRUE)
     if (append == TRUE) {result <- cbind(result, rep_result)}
     else {result <- cbind(result, rep_result[component_name[rep]])}
