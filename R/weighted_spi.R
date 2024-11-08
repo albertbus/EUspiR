@@ -2,25 +2,39 @@
 #' @description
 #' Calculate the weighted value of a given component with the population data of
 #' the NUTS-2 regions, according to the EU-SPI (2020) methodology.
-#' @param unweighted_values Data frame with the values to weight of the chosen
-#' component. See details for more information about the format of the data frame.
-#' @param country NUTS-0 code of the country to weight. For several countries,
-#' country should be a vector of the NUTS-0 codes to be used. It can also take the value
-#' "all" so that it is applied to each EU country at once.
-#' @param nationalValue Data frame with the national values to weight for the chosen
-#' component. See details for more information about the format of the data frame.
+#' @param country NUTS-0 code of the country to weight. For more than one country,
+#' it should be a string vector of the NUTS-0 codes to be used. It can also take
+#' the value "all" so that it is applied to all EU countries at once.
+#' @param unweighted_values Data frame with the values to weight. By default it
+#' uses the official EU-SPI (2020) data. See details to learn how to use custom
+#' data.
+#' @param national_value Data frame with the national values to use. By default it
+#' uses the official EU-SPI (2020) data. See details to learn how to use custom
+#' data.
 #'
 #' @details
-#' The parameters unweighted_values and nationalValue dataframe should have the following
-#' format:
-#' - First column(s) should be of type character. There is no rules on how many
-#' columns should the data frame have of this type but the function expects at
-#' least one to be named "NUTS_ID" and have the NUTS-2 or NUT-S0 code for each
-#' region on each row.
-#' - The following columns should be of type numeric. Each column should have one
-#' component to be weighted and each row should represent one region or country.
+#' ## Custom unweighted values
+#' - First column(s): At least one of the first columns should be called "NUTS_ID",
+#' this column should have the NUTS-2 code for each region to weight.
+#' - The following columns should be numeric and each one should have one component
+#' to be weighted. Each row should represent one region.
+#' 
+#' ## Custom national values
+#' - First column(s): At least one of the first columns should be called "NUTS_ID",
+#' and have the NUTS-0 code for each country.
+#' - The following columns should be numeric and each one should have the national
+#' vlaues of one component. Each row should represent one country.
 #'
 #' @examples
+#' # With official data
+#' ## For one country
+#' weighted_spi("AT") # Weighted values for Austria
+#' ## For several countries
+#' weighted_spi(c("BE","ES")) # Weighted values for Belgium and Spain
+#' ## For all countries
+#' weighted_spi("all")
+#' 
+#' # With custom data 
 #' data <- data.frame("NUTS_ID" = c("AT11", "AT12", "AT13", "AT21",
 #'                                  "AT22", "AT31", "AT32", "AT33", "AT34"),
 #'                    "Component1" = sample(1:100,9),
@@ -37,11 +51,13 @@
 #'
 #' @export
 
-weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL, append = TRUE){
+weighted_spi <- function(country, unweighted_values = NULL, national_value = NULL, append = TRUE){
   #Handling of given data in case of potential errors
-  if (!is.null(unweighted_values)) {stopifnot(is.data.frame(unweighted_values))}
-  if (!is.null(nationalValue)) {stopifnot(is.data.frame(nationalValue))}
-  stopifnot(is.character(country))
+  if (!is.null(unweighted_values)) {if(!is.data.frame(unweighted_values)) {
+    stop(paste0("Error: 'unweighted_values' must be a data frame, but it was of type: ", typeof(unweighted_values), "."))}}
+  if (!is.null(unweighted_values)) {if(!is.data.frame(national_value)) {
+    stop(paste0("Error: 'national_value' must be a data frame, but it was of type: ", typeof(national_value), "."))}}
+  if (!is.character(country)) {stop(paste0("Error: 'country' must be a string, but it was of type: ", typeof(national_value), "."))}
   country <- tolower(country)
   if (!any(country == "all")) {stopifnot(nchar(country[1]) == 2)
     country <- toupper(country)}
@@ -50,12 +66,12 @@ weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL
   if (is.null(unweighted_values)) {
     if(append == TRUE){unweighted_values <- spi_indicator_sum("regional")}
     else{unweighted_values <- spi_indicator_sum("regional", append = FALSE)}
-    colnames(unweighted_values)[2] <- "NUTS_ID1"
+    colnames(unweighted_values)[2] <- "NUTS_ID"
     }
-  if (is.null(nationalValue)) {
-    if(append == TRUE){nationalValue <- spi_indicator_sum("national")}
-    else{nationalValue <- spi_indicator_sum("national", append = FALSE)}
-    colnames(nationalValue)[1] <- "NUTS_ID"
+  if (is.null(national_value)) {
+    if(append == TRUE){national_value <- spi_indicator_sum("national")}
+    else{national_value <- spi_indicator_sum("national", append = FALSE)}
+    colnames(national_value)[1] <- "NUTS_ID"
     }
 
   #Creation of the data base of population and countries
@@ -76,7 +92,7 @@ weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL
   # Application of the formula to each component
   weighted_data <- unweighted_values[which(sapply(unweighted_values, is.character))]
   is_num <- which(sapply(unweighted_values, is.numeric))
-  diff_num <- as.numeric(which(sapply(nationalValue, is.numeric))[1] - is_num[1])
+  diff_num <- as.numeric(which(sapply(national_value, is.numeric))[1] - is_num[1])
 
   for (component in (is_num)) {
     #A pplication of the formula to each corresponding country
@@ -84,7 +100,7 @@ weighted_spi <- function(country, unweighted_values = NULL, nationalValue = NULL
     for (c in countries) {
       weights <- population[grepl(paste0("^", c), population$geo),]
       unweighted <- unweighted_values[grepl(paste0("^", c), unweighted_values$NUTS_ID), component]
-      national <- nationalValue[grepl(c, nationalValue$NUTS_ID), (component+diff_num)]
+      national <- national_value[grepl(c, national_value$NUTS_ID), (component+diff_num)]
 
       #Application of the formula to each corresponding region
       reg_result <- c()
